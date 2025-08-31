@@ -15,6 +15,11 @@ public class AdministradorServicos : iAdministradorServicos
         _contexto = contexto;
     }
 
+    public Administrador? BuscarPorId(int id)
+    {
+        return _contexto.Administradores.Where(a => a.Id == id).FirstOrDefault();
+    }
+
     public Administrador Incluir(Administrador administrador)
     {
         _contexto.Administradores.Add(administrador);
@@ -30,6 +35,15 @@ public class AdministradorServicos : iAdministradorServicos
 
     public List<Administrador> Todos(int? pagina)
     {
-        throw new NotImplementedException();
+        var querry = _contexto.Administradores.AsQueryable();
+        int itensPorPagina = 10;
+        if(pagina != null)
+        querry.Skip(((int)pagina - 1) * itensPorPagina).Take(itensPorPagina);
+        return querry.ToList();
+    }
+
+    Administrador? iAdministradorServicos.BuscarPorId(int id)
+    {
+        return BuscarPorId(id);
     }
 }
